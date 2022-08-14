@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                                  
+     "lib": ["esnext"],                                        
+     "experimentalDecorators": true,                   
+     "emitDecoratorMetadata": true,                    
+    "module": "commonjs",                                
+     "rootDir": "./src",                                  
+     "typeRoots": [
+      "./node-modules/@types",
+      "./src/@types"
+     ],                                  
+     "resolveJsonModule": true,                        
+     "allowJs": true,                                  
+     "outDir": "./dist",                                   
+     "removeComments": true,                           
+    "esModuleInterop": true,                             
+    "forceConsistentCasingInFileNames": true,            
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@controllers/*": ["./src/controllers/*"],
+      "@models/*": ["./src/models/*"],
+      "@views/*": ["./src/views/*"],
+      "@config/*": ["./src/config/*"]
+    },
+    "sourceMap": true                               
+  }
+}
