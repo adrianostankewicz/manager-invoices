@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,9 +10,87 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   name       String
-  email      String   @unique
+  password   String
+  email      String
+  role       String
+  admin      Boolean
   created_at DateTime @default(now())
-  updated_at DateTime
+  updated_at DateTime @default(now()) @updatedAt
+  company    Company? @relation("UserCompany")
 
-  @@map("users")
+  @@map("mi_users")
+}
+
+model Company {
+  id          String              @id @default(uuid())
+  name        String              @unique
+  cpnj        Int                 @unique
+  email       String
+  status      String
+  created_at  DateTime            @default(now())
+  updated_at  DateTime            @default(now()) @updatedAt
+  user        User                @relation("UserCompany", fields: [user_id], references: [id])
+  user_id     String              @unique
+  invoice     Invoice[]           @relation("InvoiceCompany")
+  category    Category[]          @relation("CategoryCompany")
+  expense     Expense[]           @relation("ExpenseCompany")
+  preferences CompanyPreferences? @relation("CompanyPreferences")
+
+  @@map("mi_companies")
+}
+
+model CompanyPreferences {
+  id                  String   @id @default(uuid())
+  billing_threshold   Decimal
+  notifications_email Boolean
+  notifications_sms   Boolean
+  created_at          DateTime @default(now())
+  updated_at          DateTime @default(now()) @updatedAt
+  company             Company  @relation("CompanyPreferences", fields: [company_id], references: [id])
+  company_id          String   @unique
+}
+
+model Invoice {
+  id                String   @id @default(uuid())
+  invoice_number    BigInt   @unique
+  invoice_value     Decimal
+  description       String
+  competition_month Int
+  receipt_date      DateTime
+  created_at        DateTime @default(now())
+  updated_at        DateTime @default(now()) @updatedAt
+  company           Company  @relation("InvoiceCompany", fields: [company_id], references: [id])
+  company_id        String   @unique
+
+  @@map("mi_invoices")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  status      String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+  company     Company   @relation("CategoryCompany", fields: [company_id], references: [id])
+  company_id  String    @unique
+  expense     Expense[] @relation("CategoryExpense")
+
+  @@map("mi_categories")
+}
+
+model Expense {
+  id               String   @id @default(uuid())
+  name             String
+  expense_value    Decimal
+  payment_date     DateTime
+  competition_date DateTime
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now()) @updatedAt
+  category         Category @relation("CategoryExpense", fields: [category_id], references: [id])
+  category_id      String   @unique
+  company          Company  @relation("ExpenseCompany", fields: [company_id], references: [id])
+  company_id       String   @unique
+
+  @@map("mi_expenses")
 }
