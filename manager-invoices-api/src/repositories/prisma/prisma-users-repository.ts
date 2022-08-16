@@ -3,7 +3,7 @@ import { UserData, UsersRepository } from "../users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
   async create({name, email, password, role, admin}: UserData) {
-    await prismaClient.users.create({
+    await prismaClient.user.create({
       data:{
         name,
         email,
@@ -15,7 +15,7 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async update({id, name, email, password, role, admin}: UserData){
-    await prismaClient.users.update({
+    await prismaClient.user.update({
       where: {id: id},
       data: {
         name: name, 
@@ -28,7 +28,7 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async delete(user_id: string){
-    await prismaClient.users.delete({
+    await prismaClient.user.delete({
       where: {id: user_id}
     });
   }
