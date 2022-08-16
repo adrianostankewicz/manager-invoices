@@ -10,8 +10,8 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   name       String
-  password   String
   email      String
+  password   String
   role       String
   admin      Boolean
   created_at DateTime @default(now())
@@ -48,6 +48,8 @@ model CompanyPreferences {
   updated_at          DateTime @default(now()) @updatedAt
   company             Company  @relation("CompanyPreferences", fields: [company_id], references: [id])
   company_id          String   @unique
+
+  @@map("mi_company_preferences")
 }
 
 model Invoice {
