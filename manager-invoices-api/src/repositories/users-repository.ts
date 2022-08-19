@@ -1,14 +1,11 @@
-export interface UserData {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  admin: boolean;
-}
+import { User as UserPrisma } from "@prisma/client";
+import { User } from "src/model/user";
 
 export interface UsersRepository {
-  create: (data: UserData) => Promise<void>;
-  update: (data: UserData) => Promise<void>;
-  delete: (id: string) => Promise<void>;
+  create: (data: User) => Promise<UserPrisma>;
+  update: (data: User) => Promise<UserPrisma>;
+  delete: (id: string) => Promise<UserPrisma>;
+  findById: (id: string) => Promise<UserPrisma>;
+  findByEmail: (email: string) => Promise<UserPrisma>;
+  allUsers: () => Promise<UserPrisma[]>;
 }

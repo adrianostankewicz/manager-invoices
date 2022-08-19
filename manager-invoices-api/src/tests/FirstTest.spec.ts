@@ -1,8 +1,9 @@
-import { User } from '../models/User';
+import { describe, expect, test } from '@jest/globals';
 
-test('it should be ok', () => {
-  const user = new User();
-  user.name = 'Adriano';
-
-  expect(user.name).toEqual('Adriano');
+describe('teste', () =>{
+  test('it should be ok', () => {
+    const name = 'Adriano';
+  
+    expect(name).toEqual('Adriano');
+  });
 });

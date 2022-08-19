@@ -11,26 +11,25 @@ model User {
   id         String   @id @default(uuid())
   name       String
   email      String
+  cellphone  String
   password   String
   role       String
   admin      Boolean
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
-  company    Company? @relation("UserCompany")
 
   @@map("mi_users")
 }
 
 model Company {
   id          String              @id @default(uuid())
-  name        String              @unique
-  cpnj        Int                 @unique
+  social_name String
+  cnpj        String              @unique
   email       String
   status      String
+  owner       Boolean
   created_at  DateTime            @default(now())
   updated_at  DateTime            @default(now()) @updatedAt
-  user        User                @relation("UserCompany", fields: [user_id], references: [id])
-  user_id     String              @unique
   invoice     Invoice[]           @relation("InvoiceCompany")
   category    Category[]          @relation("CategoryCompany")
   expense     Expense[]           @relation("ExpenseCompany")
@@ -54,7 +53,7 @@ model CompanyPreferences {
 
 model Invoice {
   id                String   @id @default(uuid())
-  invoice_number    BigInt   @unique
+  invoice_number    String   @unique
   invoice_value     Decimal
   description       String
   competition_month Int

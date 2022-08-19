@@ -20,7 +20,7 @@ module.exports = {
       },
     }],
   ],
-  ignore: [
-    '**/*.spec.ts',
-  ],
+  //ignore: [
+  //  '**/*.spec.ts',
+  //],
 };
