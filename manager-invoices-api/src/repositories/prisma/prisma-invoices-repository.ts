@@ -1,9 +1,10 @@
+import { Invoice } from "src/model/invoice";
 import { prismaClient } from "../../database/prisma-client";
-import { InvoiceData, InvoicesRepository } from "../invoices-repository";
+import { InvoicesRepository } from "../invoices-repository";
 
 export class PrismaInvoicesRepository implements InvoicesRepository {
   async create({invoice_number, invoice_value, description, 
-                  competition_month, receipt_date, company}: InvoiceData) {
+                  competition_month, receipt_date, company_id}: Invoice) {
     const invoiceCreated = await prismaClient.invoice.create({
       data:{
         invoice_number,
@@ -11,63 +12,63 @@ export class PrismaInvoicesRepository implements InvoicesRepository {
         description,
         competition_month,
         receipt_date,
-        company:{
-          
-        }
+        company_id
       }
     });
 
-    return companyCreated;
+    return invoiceCreated;
   }
 
-  async update({id, social_name, cnpj, email, status, owner}: CompanyData){
-    const companyUpdated = await prismaClient.company.update({
+  async update({id, invoice_number, invoice_value, description, 
+                  competition_month, receipt_date, company_id}: Invoice){
+    const invoiceUpdated = await prismaClient.invoice.update({
       where: {id: id},
       data: {
-        social_name: social_name,
-        cnpj: cnpj, 
-        email: email,
-        status: status,
-        owner: owner
+        invoice_number: invoice_number,
+        invoice_value: invoice_value,
+        description: description,
+        competition_month: competition_month,
+        receipt_date: receipt_date,
+        company_id: company_id
       }
     });
 
-    return companyUpdated;
+    return invoiceUpdated;
   }
 
-  async delete(company_id: string){
-    const companyDeleted = await prismaClient.company.delete({
-      where: {id: company_id}
+  async delete(invoice_id: string){
+    const invoiceDeleted = await prismaClient.invoice.delete({
+      where: {id: invoice_id}
     });
 
-    return companyDeleted;
+    return invoiceDeleted;
   }
 
-  async findById(company_id: string){
-    const company = await prismaClient.company.findFirst({
-      where: {id: company_id}
+  async findById(invoice_id: string){
+    const invoice = await prismaClient.invoice.findFirst({
+      where: {id: invoice_id}
     });
 
-    return company;
+    return invoice;
   }
 
-  async findBySocialName(social_name: string){
-    const company = await prismaClient.company.findFirst({
-      where: {social_name: social_name}
+  async findByInvoiceNumber(invoice_number: string){
+    const invoice = await prismaClient.invoice.findFirst({
+      where: {invoice_number: invoice_number}
     });
 
-    return company;
+    return invoice;
   }
 
-  async findByCnpj(cnpj: number){
-    const company = await prismaClient.company.findFirst({
-      where: {cnpj: cnpj}
+  async findByReceiptDate(receipt_date: Date){
+    const invoice = await prismaClient.invoice.findFirst({
+      where: {receipt_date: receipt_date}
     });
 
-    return company;
+    return invoice;
   }
 
-  async allCompanies(){
-    return await prismaClient.company.findMany();
+  async allInvoices(){
+    return await prismaClient.invoice.findMany();
   }
 }

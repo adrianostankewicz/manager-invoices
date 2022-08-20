@@ -22,18 +22,16 @@ model User {
 }
 
 model Company {
-  id          String              @id @default(uuid())
+  id          String    @id @default(uuid())
   social_name String
-  cnpj        String              @unique
+  cnpj        String    @unique
   email       String
   status      String
   owner       Boolean
-  created_at  DateTime            @default(now())
-  updated_at  DateTime            @default(now()) @updatedAt
-  invoice     Invoice[]           @relation("InvoiceCompany")
-  category    Category[]          @relation("CategoryCompany")
-  expense     Expense[]           @relation("ExpenseCompany")
-  preferences CompanyPreferences? @relation("CompanyPreferences")
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+  invoice     Invoice[] @relation("InvoiceCompany")
+  expense     Expense[] @relation("ExpenseCompany")
 
   @@map("mi_companies")
 }
@@ -45,8 +43,6 @@ model CompanyPreferences {
   notifications_sms   Boolean
   created_at          DateTime @default(now())
   updated_at          DateTime @default(now()) @updatedAt
-  company             Company  @relation("CompanyPreferences", fields: [company_id], references: [id])
-  company_id          String   @unique
 
   @@map("mi_company_preferences")
 }
@@ -73,8 +69,6 @@ model Category {
   status      String
   created_at  DateTime  @default(now())
   updated_at  DateTime  @default(now()) @updatedAt
-  company     Company   @relation("CategoryCompany", fields: [company_id], references: [id])
-  company_id  String    @unique
   expense     Expense[] @relation("CategoryExpense")
 
   @@map("mi_categories")
@@ -82,7 +76,7 @@ model Category {
 
 model Expense {
   id               String   @id @default(uuid())
-  name             String
+  name             String   @unique
   expense_value    Decimal
   payment_date     DateTime
   competition_date DateTime

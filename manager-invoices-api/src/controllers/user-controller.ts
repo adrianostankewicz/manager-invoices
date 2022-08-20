@@ -1,22 +1,18 @@
 import { Request, Response } from "express";
 import { User } from "src/model/user";
 import { PrismaUsersRepository } from "src/repositories/prisma/prisma-users-repository";
-import { UsersRepository } from "src/repositories/users-repository";
-import { UsersServices } from "src/services/users-service";
+import { UsersService } from "src/services/users-service";
 
 export class UserController {
   
-  private usersRepository: UsersRepository;
-  private usersService: UsersServices;
-
-  constructor(){
-    this.usersRepository = new PrismaUsersRepository();
-    this.usersService = new UsersServices();
-  }
-
+  /**
+   * Create a new user
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async store(req: Request, res: Response){
     try {
-      
       const user = new User();
       user.name = req.body.name;
       user.email = req.body.email;
@@ -25,7 +21,8 @@ export class UserController {
       user.role = req.body.role;
       user.admin = req.body.admin;
 
-      const userCreated = await this.usersService.save(user);
+      let usersService = new UsersService();
+      const userCreated = await usersService.save(user);
 
       if(!userCreated){
         return res.status(404).send({'message': 'Could not create a new user. Please, try again in few minutes'});
@@ -38,16 +35,24 @@ export class UserController {
     }
   }
 
+  /**
+   * Edit a exist user
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async edit(req: Request, res: Response){
     try {
       const user = new User();
+      user.id = req.body.id;
       user.name = req.body.name;
       user.email = req.body.email;
       user.cellphone = req.body.cellphone;
       user.password = req.body.password;
       user.role = req.body.role;
       
-      const userUpdated = await this.usersRepository.update(user);
+      let usersService = new UsersService();
+      const userUpdated = await usersService.update(user);
 
       return res.status(200).send(userUpdated);
 
@@ -56,15 +61,22 @@ export class UserController {
     }
   }
 
+  /**
+   * Delete a user by id
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async destroy(req: Request, res: Response){
-    const id = req.body.id;
+    const id = req.params.id;
 
     if(!id){
       res.status(400).send('Id is required');
     }
     
     try {
-      const deletedUser = await this.usersRepository.delete(id);
+      let usersService = new UsersService();
+      const deletedUser = await usersService.delete(id);
 
       return res.status(200).send(deletedUser);
 
@@ -73,8 +85,15 @@ export class UserController {
     }
   }
   
+  /**
+   * Get a user by id
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async show(req: Request, res: Response){
-    const user = await this.usersRepository.findById(req.body.id);
+    let usersRepository = new PrismaUsersRepository();
+    const user = await usersRepository.findById(req.params.id);
     return res.status(200).send(user);
   }
 }

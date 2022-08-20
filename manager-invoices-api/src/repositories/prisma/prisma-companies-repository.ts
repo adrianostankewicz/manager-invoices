@@ -1,8 +1,9 @@
+import { Company } from "src/model/company";
 import { prismaClient } from "../../database/prisma-client";
-import { CompanyData, CompaniesRepository } from "../companies-repository";
+import { CompaniesRepository } from "../companies-repository";
 
 export class PrismaCompaniesRepository implements CompaniesRepository {
-  async create({social_name, cnpj, email, status, owner}: CompanyData) {
+  async create({social_name, cnpj, email, status, owner}: Company) {
     const companyCreated = await prismaClient.company.create({
       data:{
         social_name,
@@ -16,7 +17,7 @@ export class PrismaCompaniesRepository implements CompaniesRepository {
     return companyCreated;
   }
 
-  async update({id, social_name, cnpj, email, status, owner}: CompanyData){
+  async update({id, social_name, cnpj, email, status, owner}: Company){
     const companyUpdated = await prismaClient.company.update({
       where: {id: id},
       data: {
@@ -55,7 +56,7 @@ export class PrismaCompaniesRepository implements CompaniesRepository {
     return company;
   }
 
-  async findByCnpj(cnpj: number){
+  async findByCnpj(cnpj: string){
     const company = await prismaClient.company.findFirst({
       where: {cnpj: cnpj}
     });

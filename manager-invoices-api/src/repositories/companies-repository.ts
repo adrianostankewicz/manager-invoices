@@ -1,20 +1,12 @@
-import { Company } from "@prisma/client";
-
-export interface CompanyData {
-  id?: string;
-  social_name: string;
-  cnpj: number;
-  email: string;
-  status: string;
-  owner: boolean;
-}
+import { Company as CompanyPrisma } from "@prisma/client";
+import { Company } from "src/model/company";
 
 export interface CompaniesRepository {
-  create: (data: CompanyData) => Promise<Company>;
-  update: (data: CompanyData) => Promise<Company>;
-  delete: (id: string) => Promise<Company>;
-  findById: (id: string) => Promise<Company>;
-  findBySocialName: (social_name: string) => Promise<Company>;
-  findByCnpj: (cnpj: number) => Promise<Company>;
-  allCompanies: () => Promise<Company[]>;
+  create: (data: Company) => Promise<CompanyPrisma>;
+  update: (data: Company) => Promise<CompanyPrisma>;
+  delete: (id: string) => Promise<CompanyPrisma>;
+  findById: (id: string) => Promise<CompanyPrisma>;
+  findBySocialName: (social_name: string) => Promise<CompanyPrisma>;
+  findByCnpj: (cnpj: string) => Promise<CompanyPrisma>;
+  allCompanies: () => Promise<CompanyPrisma[]>;
 }

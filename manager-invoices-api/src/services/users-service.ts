@@ -1,9 +1,9 @@
 import { User } from "src/model/user";
 import { PrismaUsersRepository } from "src/repositories/prisma/prisma-users-repository";
 import { UsersRepository } from "src/repositories/users-repository";
-import { bcrypt } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
-export class UsersServices {
+export class UsersService {
 
   private usersRepository: UsersRepository;
   
@@ -29,11 +29,11 @@ export class UsersServices {
       throw new Error('Cellphone is required');
     }
 
-    if(this.usersRepository.findByEmail(user.email)){
+    if(await this.usersRepository.findByEmail(user.email)){
       throw new Error('User already exist');
     }
 
-    user.password = bcrypt.hash(user.password, 10);
+    user.password = await bcrypt.hash(user.password, 10);
     const userCreated = await this.usersRepository.create(user);
 
     userCreated.password = undefined;
@@ -50,11 +50,11 @@ export class UsersServices {
     }
 
     if(user.email !== userUpdate.email){
-      throw new Error('Field email do not to update');
+      throw new Error('Field email do not to updatable');
     }
 
     if(user.password){
-      user.password = bcrypt.hash(user.password, 10);
+      user.password = await bcrypt.hash(user.password, 10);
     }
 
     const userUpdated = await this.usersRepository.update(user);
