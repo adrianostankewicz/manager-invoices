@@ -1,5 +1,10 @@
-import { Dashboard } from './components/Dashboard';
+import { Route, Routes } from "react-router-dom";
+import { Login } from "./pages/Login";
 
 export function App() {
-  return <Dashboard />
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+    </Routes>
+  )  
 }
