@@ -1,0 +1,369 @@
+openapi: 3.0.3
+info:
+  title: Manager Invoices
+  description: |-
+    This is a sample system to manager invoices for entrepeneurs.
+
+  contact:
+    email: adriano.stankewicz@gmail.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:3333
+tags:
+  - name: token
+    description: Get token for authorization login
+  - name: login
+    description: User login
+  - name: user
+    description: User of system
+  - name: company
+    description: Companies that the user provides services to
+paths:
+  /company:
+    post:
+      tags:
+        - company
+      summary: Add a new company
+      description: Add a new company or partner of 
+      requestBody:
+        description: Create a new company
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '405':
+          description: Invalid input
+    put:
+      tags:
+        - company
+      summary: Update an existing company
+      description: Update an existing company by Id
+      requestBody:
+        description: Update an existent company
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Company not found
+        '405':
+          description: Validation exception
+  
+  /company/{id}:
+    get:
+      tags:
+        - company
+      summary: Get company by id 
+      description: 'Get company by id'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: Company not found
+          
+    delete:
+      tags:
+        - company
+      summary: Delete company
+      description: Delete company
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: Company not found
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: Update user.
+      parameters:
+        - name: id
+          in: query
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+  /user/{id}:            
+    get:
+      tags:
+        - user
+      summary: Get user by id
+      description: 'Get user by id'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+          
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid id supplied
+        '404':
+          description: User not found  
+  /user/login:
+    get:
+      tags:
+        - login
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+        - login
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+components:
+  schemas:
+    Company:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 611adsUadoiedasd54845
+        social_name:
+          type: string
+          example: Company Test
+        cnpj:
+          type: string
+          example: '20062705000140'
+        email:
+          type: string
+          example: company@email.com.br
+        owner:
+          type: boolean
+          example: true
+    CompanyCreate:
+      type: object
+      properties:
+        social_name:
+          type: string
+          example: Company Test
+        cnpj:
+          type: string
+          example: '20062705000140'
+        email:
+          type: string
+          example: company@email.com.br
+        owner:
+          type: boolean
+          example: true
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '23c57882-e66d-4651-a25d-bbe8f1cba2a3'
+        name:
+          type: string
+          example: User Name
+        email:
+          type: string
+          example: user@email.com
+        cellphone:
+          type: string
+          example: '4199887766'
+        password:
+          type: string
+          example: '12345'
+        role:
+          type: string
+          example: 'admin'
+        admin:
+          type: boolean
+          example: true
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: User Name
+        email:
+          type: string
+          example: user@email.com
+        cellphone:
+          type: string
+          example: '4199887766'
+        password:
+          type: string
+          example: '12345'
+        role:
+          type: string
+          example: 'admin'
+        admin:
+          type: boolean
+          example: true
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+  requestBodies:
+    Company:
+      description: Companies that the user provides services to
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Company'
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:companies: modify companies in your account
+            read:companies: read your companies
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
